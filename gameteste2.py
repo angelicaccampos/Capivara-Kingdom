@@ -1,5 +1,4 @@
 import pygame
-import time
 
 # Inicialização do Pygame
 pygame.init()
@@ -35,11 +34,8 @@ character_speed = 5
 # Controle para alternar entre as imagens
 image_index = 0
 
-# Função para inverter as imagens
-def inverter_imagens():
-    global image1, image2
-    image1 = pygame.transform.flip(image1, True, False)
-    image2 = pygame.transform.flip(image2, True, False)
+# Variável para controlar o flip horizontal
+flip = False
 
 # Loop principal do jogo
 running = True
@@ -52,11 +48,12 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         character_rect.x -= character_speed
+        flip = False
         image_index += 1
     if keys[pygame.K_RIGHT]:
         character_rect.x += character_speed
+        flip = True
         image_index += 1
-        inverter_imagens()  # Chama a função para inverter as imagens ao pressionar a tecla para a direita
     if keys[pygame.K_UP]:
         character_rect.y -= character_speed
         image_index += 1
@@ -74,7 +71,11 @@ while running:
     screen.fill(WHITE)
 
     # Desenho do personagem na tela
-    screen.blit(character_image, character_rect)
+    if flip:
+        character_image_flipped = pygame.transform.flip(character_image, True, False)
+        screen.blit(character_image_flipped, character_rect)
+    else:
+        screen.blit(character_image, character_rect)
 
     # Atualização da tela
     pygame.display.flip()
